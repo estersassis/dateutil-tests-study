@@ -41,27 +41,39 @@ jobs:
       run: |
         echo "=== DADOS METODOLÓGICOS DO EXPERIMENTO ==="
         
-        # 1. Recupera os timestamps de todas as iterações do script test.sh
-        COMMITS_ITERACAO=$(git log --format="%at" --grep="Iteration Status:")
+        # 1. Identifica o nome da branch atual que disparou o workflow
+        BRANCH_ATUAL=${{ github.ref_name }}
+        
+        # Se estivermos na main/master, olha o histórico local. Se for uma branch, filtra o log apenas dela em relação à main.
+        if [ "$BRANCH_ATUAL" = "main" ] || [ "$BRANCH_ATUAL" = "master" ]; then
+          COMMITS_ITERACAO=$(git log --format="%at" --grep="Iteration Status:")
+        else
+          # Garante que a main local está atualizada para servir de base para o delta
+          git fetch origin main:main || git fetch origin master:master || true
+          BASE_BRANCH=$(git show-ref --verify --quiet refs/heads/main && echo "main" || echo "master")
+          
+          # CAPTURA APENAS OS COMMITS DA BRANCH ATUAL (que não existem na main)
+          COMMITS_ITERACAO=$(git log --format="%at" --grep="Iteration Status:" $BASE_BRANCH..HEAD)
+        fi
         
         if [ -z "$COMMITS_ITERACAO" ]; then
-          echo "Lead Time (M2): 0 minutos (Nenhum ciclo de teste executado)."
+          echo "Lead Time (M2): 0 minutos (Nenhum ciclo de teste executado nesta branch)."
           echo "Total de Iterações: 0"
         else
-          # O primeiro commit da iteração é o último da lista reversa
+          # O primeiro commit da iteração na branch é o último da lista reversa
           FIRST_ITERATION_TS=$(echo "$COMMITS_ITERACAO" | tail -n 1)
           # O commit atual (último ciclo) é o primeiro da lista
           CURRENT_ITERATION_TS=$(echo "$COMMITS_ITERACAO" | head -n 1)
           
-          # Calcula a diferença absoluta em segundos e converte para minutos (padrão M2 do GQM)
           DELTA_SECONDS=$((CURRENT_ITERATION_TS - FIRST_ITERATION_TS))
           LEAD_TIME_MINUTES=$(python3 -c "print(round($DELTA_SECONDS / 60, 2))")
           
           TOTAL_ITERACOES=$(echo "$COMMITS_ITERACAO" | wc -l)
           
-          echo "Primeira Iteração (Timestamp): $FIRST_ITERATION_TS"
-          echo "Última Iteração (Timestamp): $CURRENT_ITERATION_TS"
-          echo "Total de Ciclos (Tentativa/Erro): $TOTAL_ITERACOES"
+          echo "Branch Avaliada: $BRANCH_ATUAL"
+          echo "Primeira Iteração na Branch (Timestamp): $FIRST_ITERATION_TS"
+          echo "Última Iteração na Branch (Timestamp): $CURRENT_ITERATION_TS"
+          echo "Total de Ciclos nesta Branch (Tentativa/Erro): $TOTAL_ITERACOES"
           echo "Lead Time Real da Tarefa (M2): $LEAD_TIME_MINUTES minutos"
         fi
         
