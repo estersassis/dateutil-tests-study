@@ -30,21 +30,41 @@ jobs:
         coverage report -m > cobertura_relativedelta.txt
         coverage json -o cobertura_dados.json
 
-    - name: Calcular Lead Time (M2) e Contar Asserções (M3)
+    - name: Calcular Lead Time Dinâmico (M2) e Contar Asserções (M3)
       run: |
-        # Script rápido para cuspir metadados de tempo do Git no log do CI
-        echo "=== DADOS METODOLÓGICOS ==="
-        echo "Primeiro Commit: $(git log --reverse --format="%at" | head -n 1)"
-        echo "Commit Atual: $(git log -1 --format="%at")"
-        echo "Total de Commits: $(git rev-list --count HEAD)"
+        echo "=== DADOS METODOLÓGICOS DO EXPERIMENTO ==="
         
-        # Conta a densidade de asserções (M3) de forma estática no arquivo de teste
-        if [ -f "tests/test_relativedelta.py" ]; then
-          echo "Quantidade de asserts: $(grep -o "assert " tests/test_relativedelta.py | wc -l)"
+        # 1. Recupera os timestamps de todas as iterações do script test.sh
+        COMMITS_ITERACAO=$(git log --format="%at" --grep="Iteration Status:")
+        
+        if [ -z "$COMMITS_ITERACAO" ]; then
+          echo "Lead Time (M2): 0 minutos (Nenhum ciclo de teste executado)."
+          echo "Total de Iterações: 0"
         else
-          echo "Quantidade de asserts: 0 (Arquivo não criado)"
+          # O primeiro commit da iteração é o último da lista reversa
+          FIRST_ITERATION_TS=$(echo "$COMMITS_ITERACAO" | tail -n 1)
+          # O commit atual (último ciclo) é o primeiro da lista
+          CURRENT_ITERATION_TS=$(echo "$COMMITS_ITERACAO" | head -n 1)
+          
+          # Calcula a diferença absoluta em segundos e converte para minutos (padrão M2 do GQM)
+          DELTA_SECONDS=$((CURRENT_ITERATION_TS - FIRST_ITERATION_TS))
+          LEAD_TIME_MINUTES=$(echo "scale=2; $DELTA_SECONDS / 60" | bc 2>/dev/null || python3 -c "print(round($DELTA_SECONDS / 60, 2))")
+          
+          TOTAL_ITERACOES=$(echo "$COMMITS_ITERACAO" | wc -l)
+          
+          echo "Primeira Iteração (Timestamp): $FIRST_ITERATION_TS"
+          echo "Última Iteração (Timestamp): $CURRENT_ITERATION_TS"
+          echo "Total de Ciclos (Tentativa/Erro): $TOTAL_ITERACOES"
+          echo "Lead Time Real da Tarefa (M2): $LEAD_TIME_MINUTES minutos"
         fi
-        echo "=========================="
+        
+        # 2. Contagem Estática de Asserções (M3)
+        if [ -f "tests/test_relativedelta.py" ]; then
+          echo "Densidade de Asserções (M3): $(grep -o "assert " tests/test_relativedelta.py | wc -l) asserts"
+        else
+          echo "Densidade de Asserções (M3): 0 (Arquivo de teste não encontrado)"
+        fi
+        echo "=========================================="
 
     - name: Salvar Artefatos de Pesquisa (Ocultos para o Usuário)
       uses: actions/upload-artifact@v4
