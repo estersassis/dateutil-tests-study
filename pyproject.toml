@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "dateutil-tests-study"
+version = "0.1.0"
+description = "Ambiente de Experimento Empírico - IA vs Humanos"
+authors = ["Ester Sara Assis Silva <estersilva@dcc.ufmg.br>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dateutil = "^2.9.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+coverage = "^7.4.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
