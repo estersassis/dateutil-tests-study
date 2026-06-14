@@ -189,7 +189,7 @@ class TestRelativeDeltaAddition:
         result = rd + td
         assert result.months == 1
         assert result.days == 5
-        assert result.seconds == 10800
+        assert result.hours == 3
         
     def test_add_with_weekday(self):
         dt = datetime.date(2020, 1, 15)
@@ -324,8 +324,8 @@ class TestRelativeDeltaDivision:
     def test_div_by_float(self):
         rd = relativedelta(years=2, months=6)
         result = rd / 0.5
-        assert result.years == 4
-        assert result.months == 12
+        assert result.years == 5
+        assert result.months == 0
         
     def test_truediv(self):
         rd = relativedelta(days=10)
@@ -426,7 +426,7 @@ class TestRelativeDeltaWeeksProperty:
     def test_weeks_setter(self):
         rd = relativedelta(days=5)
         rd.weeks = 3
-        assert rd.days == 19
+        assert rd.days == 26
         
     def test_weeks_setter_replaces_weeks(self):
         rd = relativedelta(days=21)
@@ -438,8 +438,8 @@ class TestRelativeDeltaNormalized:
     def test_normalized_basic(self):
         rd = relativedelta(days=1.5, hours=12)
         normalized = rd.normalized()
-        assert normalized.days == 1
-        assert normalized.hours == 24
+        assert normalized.days == 2
+        assert normalized.hours == 0
         
     def test_normalized_with_overflow(self):
         rd = relativedelta(hours=25.5)
@@ -551,7 +551,7 @@ class TestRelativeDeltaEdgeCases:
         
     def test_large_values(self):
         rd = relativedelta(years=100, months=1200)
-        assert rd.years == 100
+        assert rd.years == 200
         assert rd.months == 0
         
     def test_microseconds_precision(self):
