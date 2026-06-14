@@ -3,6 +3,7 @@ import datetime
 import warnings
 import operator
 from src.relativedelta import relativedelta, MO, TU, WE, TH, FR, SA, SU
+from src._common import weekday as weekday_cls
 
 # ==================== Constructor Tests ====================
 
@@ -282,6 +283,11 @@ def test_add_weekday():
     # MO(-2): Wednesday - 9 days = Monday (2019-12-23)
     assert dt + relativedelta(weekday=MO(-2)) == datetime.date(2019, 12, 23)
 
+    # Custom weekday with n=0
+    wk = weekday_cls(0, 0)
+    rd = relativedelta(weekday=wk)
+    assert dt + rd == datetime.date(2020, 1, 6)
+
 def test_sub_relativedelta():
     rd1 = relativedelta(years=2, months=3, year=2020)
     rd2 = relativedelta(years=1, months=1, month=5)
@@ -412,10 +418,58 @@ def test_hash():
 
     s = {rd1}
     assert rd1 in s
-    # Since they have different hashes, rd2 might not be found in the set depending on hash bucket
-    # but let's just assert rd1 in s
     assert rd1 in s
 
 def test_repr():
     assert repr(relativedelta()) == "relativedelta()"
     assert repr(relativedelta(years=1, months=-2, day=5, weekday=MO)) == "relativedelta(years=+1, months=-2, day=5, weekday=MO)"
+
+
+# ==================== Normalization and Edge Cases ====================
+
+def test_normalized():
+    # days to hours
+    rd1 = relativedelta(days=1.5)
+    norm1 = rd1.normalized()
+    assert norm1.days == 1
+    assert norm1.hours == 12
+
+    # hours to minutes
+    rd2 = relativedelta(hours=1.5)
+    norm2 = rd2.normalized()
+    assert norm2.hours == 1
+    assert norm2.minutes == 30
+
+    # minutes to seconds
+    rd3 = relativedelta(minutes=1.5)
+    norm3 = rd3.normalized()
+    assert norm3.minutes == 1
+    assert norm3.seconds == 30
+
+    # seconds to microseconds
+    rd4 = relativedelta(seconds=1.000001)
+    norm4 = rd4.normalized()
+    assert norm4.seconds == 1
+    assert norm4.microseconds == 1
+
+def test_weekday_class():
+    # __call__
+    assert MO(1) != MO
+    assert MO(1).n == 1
+    assert MO(1)(1) is MO(1)  # returns self if n is same
+    assert MO(1)(2) == MO(2)
+
+    # __eq__ and __ne__
+    assert MO == MO
+    assert MO != TU
+    assert MO != "invalid"
+    assert MO(1) != MO(2)
+
+    # __hash__
+    assert hash(MO) == hash(MO)
+    assert hash(MO) != hash(TU)
+
+    # __repr__
+    assert repr(MO) == "MO"
+    assert repr(MO(1)) == "MO(+1)"
+    assert repr(MO(-2)) == "MO(-2)"
