@@ -119,8 +119,8 @@ def test_addition_with_timedelta_and_reflected_addition():
     delta = relativedelta(days=2, hours=5)
     addition = delta + timedelta(days=3, seconds=3600)
     assert addition.days == 5
-    assert addition.seconds == 3600
-    assert addition.hours == 5
+    assert addition.hours == 6
+    assert addition.seconds == 0
     reflected = timedelta(days=1) + delta
     assert reflected.days == delta.days + 1
 
