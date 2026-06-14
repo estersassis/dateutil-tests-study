@@ -333,7 +333,7 @@ def test_mul_rmul():
         rd * "invalid"
     with pytest.raises(TypeError):
         rd * None
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         "invalid" * rd
 
 def test_div_truediv():
