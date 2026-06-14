@@ -454,10 +454,11 @@ def test_normalized():
 
 def test_weekday_class():
     # __call__
-    assert MO(1) != MO
-    assert MO(1).n == 1
-    assert MO(1)(1) is MO(1)  # returns self if n is same
-    assert MO(1)(2) == MO(2)
+    mo_1 = MO(1)
+    assert mo_1 != MO
+    assert mo_1.n == 1
+    assert mo_1(1) is mo_1  # returns self if n is same
+    assert mo_1(2) == MO(2)
 
     # __eq__ and __ne__
     assert MO == MO
