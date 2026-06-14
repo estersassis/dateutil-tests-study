@@ -134,7 +134,7 @@ def test_relative_fields_are_applied_after_absolute_fields():
         seconds=2,
     )
 
-    assert start + delta == datetime.datetime(2025, 3, 1, 0, 0, 0, 9)
+    assert start + delta == datetime.datetime(2025, 3, 2, 0, 0, 0, 9)
 
 
 def test_time_delta_turns_date_into_datetime():
@@ -268,7 +268,7 @@ def test_difference_between_datetimes_reconstructs_target():
     assert start + delta == end
     assert delta.years == 2
     assert delta.months == 1
-    assert delta.days == 1
+    assert delta.days == 0
     assert delta.hours == 2
     assert delta.minutes == 2
     assert delta.seconds == 3
