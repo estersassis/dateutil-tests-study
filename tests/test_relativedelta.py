@@ -329,8 +329,10 @@ def test_mul_rmul():
     assert res2.months == 5
     assert res2.day == 5
 
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         rd * "invalid"
+    with pytest.raises(TypeError):
+        rd * None
     with pytest.raises(TypeError):
         "invalid" * rd
 
@@ -347,8 +349,11 @@ def test_div_truediv():
     assert res2.months == 3
     assert res2.day == 5
 
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         rd / "invalid"
+
+    with pytest.raises(TypeError):
+        rd / None
 
     with pytest.raises(ZeroDivisionError):
         rd / 0
