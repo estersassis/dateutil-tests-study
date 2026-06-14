@@ -12,8 +12,8 @@ Antes de tocar em qualquer arquivo ou linha de código, você precisa criar a su
 
 Abra o terminal na raiz do projeto e execute:
 ```
-# Certifique-se de estar na main/master limpa
-git checkout master
+# Certifique-se de estar na main limpa
+git checkout main
 
 # Crie e mude para a sua branch utilizando seu nome (ex: feature/humano-ester)
 git checkout -b feature/humano-SEU_NOME
