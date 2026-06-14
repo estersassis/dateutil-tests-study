@@ -357,3 +357,60 @@ def test_div_truediv():
 
     with pytest.raises(ZeroDivisionError):
         rd / 0
+
+
+# ==================== Properties, Comparison, and Representation Tests ====================
+
+def test_weeks_property():
+    rd = relativedelta(days=15)
+    assert rd.weeks == 2
+
+    rd.weeks = 3
+    # self.days = 15 - (2 * 7) + 3 * 7 = 15 - 14 + 21 = 22
+    assert rd.days == 22
+    assert rd.weeks == 3
+
+    rd_neg = relativedelta(days=-15)
+    assert rd_neg.weeks == -2
+
+def test_bool():
+    assert not bool(relativedelta())
+    assert bool(relativedelta(days=1))
+    assert bool(relativedelta(year=2020))
+    assert bool(relativedelta(weekday=MO))
+
+def test_eq_ne():
+    rd1 = relativedelta(years=1, months=2)
+    rd2 = relativedelta(years=1, months=2)
+    rd3 = relativedelta(years=1, months=3)
+
+    assert rd1 == rd2
+    assert rd1 != rd3
+    assert rd1 != "invalid"
+
+    # Weekday comparison
+    assert relativedelta(weekday=MO) == relativedelta(weekday=MO(1))
+    assert relativedelta(weekday=MO) != relativedelta(weekday=TU)
+    assert relativedelta(weekday=MO) != relativedelta(weekday=MO(2))
+    assert relativedelta(weekday=MO) != relativedelta()
+    assert relativedelta() != relativedelta(weekday=MO)
+
+    # Individual field differences
+    fields = ["years", "months", "days", "leapdays", "hours", "minutes", "seconds", "microseconds",
+              "year", "month", "day", "hour", "minute", "second", "microsecond"]
+    for field in fields:
+        kwargs1 = {field: 1}
+        kwargs2 = {field: 2}
+        assert relativedelta(**kwargs1) != relativedelta(**kwargs2)
+
+def test_hash():
+    rd1 = relativedelta(years=1, weekday=MO)
+    rd2 = relativedelta(years=1, weekday=MO(1))
+    assert hash(rd1) == hash(rd2)
+
+    s = {rd1}
+    assert rd2 in s
+
+def test_repr():
+    assert repr(relativedelta()) == "relativedelta()"
+    assert repr(relativedelta(years=1, months=-2, day=5, weekday=MO)) == "relativedelta(years=+1, months=-2, day=5, weekday=MO)"
