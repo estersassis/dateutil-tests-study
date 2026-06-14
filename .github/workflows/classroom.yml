@@ -25,10 +25,17 @@ jobs:
 
     - name: Executar Testes e Coletar Cobertura Real (M1)
       run: |
-        # Executa a cobertura real de forma oculta no servidor
-        coverage run --source=src/ -m pytest tests/test_relativedelta.py || true
-        coverage report -m > cobertura_relativedelta.txt
-        coverage json -o cobertura_dados.json
+        # 1. Força a instalação do ambiente virtual no runner usando o Poetry para isolar as variáveis
+        pip install poetry
+        poetry config virtualenvs.create true
+        poetry install --no-interaction --no-root
+        
+        # 2. Executa a cobertura usando estritamente o ambiente isolado do projeto
+        poetry run coverage run --source=src/ -m pytest tests/test_relativedelta.py || true
+        
+        # 3. Gera os relatórios de saída
+        poetry run coverage report -m > coverage_report.txt
+        poetry run coverage json -o coverage_data.json
 
     - name: Calcular Lead Time Dinâmico (M2) e Contar Asserções (M3)
       run: |
