@@ -51,5 +51,6 @@ jobs:
       with:
         name: metricas-experimento-${{ github.sha }}
         path: |
-          coverage_relativedelta.txt
-          coverage_dados.json
+          ${{ github.workspace }}/coverage_report.txt
+          ${{ github.workspace }}/coverage_data.json
+        if-no-files-found: error
