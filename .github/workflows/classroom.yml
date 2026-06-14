@@ -48,7 +48,7 @@ jobs:
           
           # Calcula a diferença absoluta em segundos e converte para minutos (padrão M2 do GQM)
           DELTA_SECONDS=$((CURRENT_ITERATION_TS - FIRST_ITERATION_TS))
-          LEAD_TIME_MINUTES=$(echo "scale=2; $DELTA_SECONDS / 60" | bc 2>/dev/null || python3 -c "print(round($DELTA_SECONDS / 60, 2))")
+          LEAD_TIME_MINUTES=$(python3 -c "print(round($DELTA_SECONDS / 60, 2))")
           
           TOTAL_ITERACOES=$(echo "$COMMITS_ITERACAO" | wc -l)
           
@@ -71,6 +71,6 @@ jobs:
       with:
         name: metricas-experimento-${{ github.sha }}
         path: |
-          ${{ github.workspace }}/coverage_report.txt
-          ${{ github.workspace }}/coverage_data.json
+          coverage_report.txt
+          coverage_data.json
         if-no-files-found: error
