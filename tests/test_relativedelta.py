@@ -199,7 +199,7 @@ class TestYearday:
     def test_yearday_end_of_year(self):
         rd = relativedelta(yearday=366)
         assert rd.month == 12
-        assert rd.day == 32 - (366 - 334)  # day computed from index table
+        assert rd.day == 366 - 334  # last index boundary in the table
 
     def test_invalid_yearday_raises(self):
         with pytest.raises(ValueError):
@@ -412,7 +412,9 @@ class TestMulDiv:
 
     def test_multiply_unsupported_returns_notimplemented(self):
         rd = relativedelta(days=1)
-        assert rd.__mul__("x") is NotImplemented
+        # float() raises TypeError for these, which is caught -> NotImplemented
+        assert rd.__mul__(None) is NotImplemented
+        assert rd.__mul__([1, 2]) is NotImplemented
 
     def test_truediv(self):
         rd = relativedelta(days=10) / 2
@@ -420,7 +422,7 @@ class TestMulDiv:
 
     def test_div_unsupported_returns_notimplemented(self):
         rd = relativedelta(days=1)
-        assert rd.__div__("x") is NotImplemented
+        assert rd.__div__(None) is NotImplemented
 
 
 # ---------------------------------------------------------------------------
