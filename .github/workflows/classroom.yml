@@ -25,14 +25,10 @@ jobs:
 
     - name: Executar Testes e Coletar Cobertura Real (M1)
       run: |
-        # Executa o pytest rastreando a cobertura interna de src/
-        coverage run --source=src/ -m pytest tests/ || true
-        
-        # Gera o relatório descritivo omitindo caminhos absolutos
-        coverage report -m > coverage_relativedelta.txt
-        
-        # Gera o JSON estruturado para facilitar sua análise automatizada
-        coverage json -o coverage_dados.json
+        # Executa a cobertura real de forma oculta no servidor
+        coverage run --source=src/ -m pytest tests/test_relativedelta.py || true
+        coverage report -m > cobertura_relativedelta.txt
+        coverage json -o cobertura_dados.json
 
     - name: Calcular Lead Time (M2) e Contar Asserções (M3)
       run: |
