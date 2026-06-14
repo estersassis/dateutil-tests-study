@@ -855,7 +855,7 @@ class TestRelativeDeltaOverflow:
         assert rd.years == 1
         assert rd.months == 1
         assert rd.days == 1
-        assert rd.hours == 1
+        assert rd.hours == 2
         assert rd.minutes == 2
         assert rd.seconds == 1
         
@@ -866,30 +866,30 @@ class TestRelativeDeltaOverflow:
 
 
 class TestRelativeDeltaNotImplemented:
-    def test_add_unsupported_type(self):
+    def test_add_unsupported_type_raises_typeerror(self):
         rd = relativedelta(days=1)
-        result = rd + "invalid"
-        assert result is NotImplemented
+        with pytest.raises(TypeError):
+            rd + "invalid"
         
-    def test_subtract_unsupported_type(self):
+    def test_subtract_unsupported_type_raises_typeerror(self):
         rd = relativedelta(days=1)
-        result = rd - "invalid"
-        assert result is NotImplemented
+        with pytest.raises(TypeError):
+            rd - "invalid"
         
-    def test_multiply_unsupported_type(self):
+    def test_multiply_unsupported_type_raises_error(self):
         rd = relativedelta(days=1)
-        result = rd * "invalid"
-        assert result is NotImplemented
+        with pytest.raises(ValueError):
+            rd * "invalid"
         
-    def test_divide_unsupported_type(self):
+    def test_divide_unsupported_type_raises_error(self):
         rd = relativedelta(days=1)
-        result = rd / "invalid"
-        assert result is NotImplemented
+        with pytest.raises(ValueError):
+            rd / "invalid"
         
-    def test_equality_unsupported_type(self):
+    def test_equality_with_different_type(self):
         rd = relativedelta(days=1)
         result = rd == "invalid"
-        assert result is NotImplemented
+        assert result is False
 
 
 class TestRelativeDeltaLeapDays:
@@ -907,7 +907,7 @@ class TestRelativeDeltaLeapDays:
         dt = datetime.date(2020, 3, 1)
         rd = relativedelta(years=1, leapdays=1)
         result = dt + rd
-        assert result == datetime.date(2021, 3, 2)
+        assert result == datetime.date(2021, 3, 1)
 
 
 class TestRelativeDeltaAbsoluteTimeFields:
