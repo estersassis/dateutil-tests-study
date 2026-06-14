@@ -4,6 +4,8 @@ import warnings
 import operator
 from src.relativedelta import relativedelta, MO, TU, WE, TH, FR, SA, SU
 
+# ==================== Constructor Tests ====================
+
 def test_constructor_dt1_dt2_type_error():
     # dt1 and dt2 must be date/datetime
     with pytest.raises(TypeError):
@@ -188,3 +190,165 @@ def test_has_time():
     assert relativedelta(minute=1)._has_time == 1
     assert relativedelta(second=1)._has_time == 1
     assert relativedelta(microsecond=1)._has_time == 1
+
+
+# ==================== Arithmetic Tests ====================
+
+def test_add_relativedelta():
+    rd1 = relativedelta(years=1, months=2, year=2020)
+    rd2 = relativedelta(years=2, months=3, month=5)
+    
+    res = rd1 + rd2
+    assert res.years == 3
+    assert res.months == 5
+    assert res.year == 2020
+    assert res.month == 5
+
+def test_add_timedelta():
+    rd = relativedelta(years=1, days=2, seconds=10)
+    td = datetime.timedelta(days=3, seconds=20, microseconds=100)
+    res = rd + td
+    assert res.years == 1
+    assert res.days == 5
+    assert res.seconds == 30
+    assert res.microseconds == 100
+
+def test_add_unsupported():
+    rd = relativedelta(days=1)
+    with pytest.raises(TypeError):
+        rd + "invalid"
+
+def test_add_date_datetime():
+    # Adding relativedelta with time to date converts date to datetime
+    rd = relativedelta(hours=1)
+    dt = datetime.date(2020, 1, 1)
+    res = dt + rd
+    assert isinstance(res, datetime.datetime)
+    assert res == datetime.datetime(2020, 1, 1, 1)
+
+    # Normal addition
+    rd2 = relativedelta(years=1, months=2, days=3)
+    dt2 = datetime.date(2020, 1, 1)
+    assert dt2 + rd2 == datetime.date(2021, 3, 4)
+
+def test_add_month_overflow_underflow():
+    # month > 12
+    rd = relativedelta(months=10)
+    dt = datetime.date(2020, 5, 1)
+    assert dt + rd == datetime.date(2021, 3, 1)
+
+    # month < 1
+    rd2 = relativedelta(months=-10)
+    dt2 = datetime.date(2020, 5, 1)
+    assert dt2 + rd2 == datetime.date(2019, 7, 1)
+
+def test_add_day_clamping():
+    rd = relativedelta(months=1)
+    dt = datetime.date(2020, 1, 31)
+    assert dt + rd == datetime.date(2020, 2, 29)
+
+    dt2 = datetime.date(2021, 1, 31)
+    assert dt2 + rd == datetime.date(2021, 2, 28)
+
+def test_add_leapdays():
+    # leapdays added when month > 2 and year is leap year
+    rd = relativedelta(months=1, leapdays=1)
+    dt = datetime.date(2020, 1, 15)  # 2020 is leap year
+    # month becomes 2 (not > 2), so leapdays not added
+    assert dt + rd == datetime.date(2020, 2, 15)
+
+    rd2 = relativedelta(months=2, leapdays=1)
+    dt2 = datetime.date(2020, 1, 15)
+    # month becomes 3 (> 2), leap year, so leapdays (+1) is added to days
+    assert dt2 + rd2 == datetime.date(2020, 3, 16)
+
+    # Not leap year
+    dt3 = datetime.date(2021, 1, 15)
+    assert dt3 + rd2 == datetime.date(2021, 3, 15)
+
+def test_add_weekday():
+    # 2020-01-01 is Wednesday (2)
+    # MO is Monday (0)
+    dt = datetime.date(2020, 1, 1)
+    assert dt + relativedelta(weekday=MO) == datetime.date(2020, 1, 6)
+    assert dt + relativedelta(weekday=MO(1)) == datetime.date(2020, 1, 6)
+
+    # MO(+2): Wednesday + 12 days = Monday (2020-01-13)
+    assert dt + relativedelta(weekday=MO(2)) == datetime.date(2020, 1, 13)
+
+    # MO(-1): Wednesday - 2 days = Monday (2019-12-30)
+    assert dt + relativedelta(weekday=MO(-1)) == datetime.date(2019, 12, 30)
+
+    # MO(-2): Wednesday - 9 days = Monday (2019-12-23)
+    assert dt + relativedelta(weekday=MO(-2)) == datetime.date(2019, 12, 23)
+
+def test_sub_relativedelta():
+    rd1 = relativedelta(years=2, months=3, year=2020)
+    rd2 = relativedelta(years=1, months=1, month=5)
+    
+    res = rd1 - rd2
+    assert res.years == 1
+    assert res.months == 2
+    assert res.year == 2020
+    assert res.month == 5
+
+def test_sub_unsupported():
+    rd = relativedelta(days=1)
+    with pytest.raises(TypeError):
+        rd - "invalid"
+
+def test_rsub_date_datetime():
+    dt = datetime.date(2020, 1, 10)
+    rd = relativedelta(days=3)
+    assert dt - rd == datetime.date(2020, 1, 7)
+
+def test_neg():
+    rd = relativedelta(years=1, months=-2, day=5)
+    res = -rd
+    assert res.years == -1
+    assert res.months == 2
+    assert res.day == 5
+
+def test_abs():
+    rd = relativedelta(years=-1, months=-2, day=5)
+    res = abs(rd)
+    assert res.years == 1
+    assert res.months == 2
+    assert res.day == 5
+
+def test_mul_rmul():
+    rd = relativedelta(years=1, months=2, day=5)
+    
+    res1 = rd * 2
+    assert res1.years == 2
+    assert res1.months == 4
+    assert res1.day == 5
+
+    res2 = 2.5 * rd
+    assert res2.years == 2
+    assert res2.months == 5
+    assert res2.day == 5
+
+    with pytest.raises(TypeError):
+        rd * "invalid"
+    with pytest.raises(TypeError):
+        "invalid" * rd
+
+def test_div_truediv():
+    rd = relativedelta(years=4, months=6, day=5)
+    
+    res1 = rd / 2
+    assert res1.years == 2
+    assert res1.months == 3
+    assert res1.day == 5
+
+    res2 = rd / 2.0
+    assert res2.years == 2
+    assert res2.months == 3
+    assert res2.day == 5
+
+    with pytest.raises(TypeError):
+        rd / "invalid"
+
+    with pytest.raises(ZeroDivisionError):
+        rd / 0
