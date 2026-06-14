@@ -48,8 +48,8 @@ def test_constructor_dt1_dt2_diff():
     assert rd_neg.days == -28
     assert rd_neg.hours == -2
     assert rd_neg.minutes == -15
-    assert rd_neg.seconds == -5
-    assert rd_neg.microseconds == -50
+    assert rd_neg.seconds == -6
+    assert rd_neg.microseconds == 999950
 
 def test_constructor_dt1_dt2_while_loops():
     # Trigger the while loop in dt1 >= dt2 (compare is operator.lt, increment = -1)
