@@ -1011,3 +1011,352 @@ class TestRelativeDeltaCopy:
         rd1 = relativedelta(years=1)
         rd2 = rd1 * 2
         assert rd2 is not rd1
+
+
+class TestRelativeDeltaTwoDatesDifference:
+    def test_same_dates(self):
+        dt = datetime.date(2020, 1, 15)
+        rd = relativedelta(dt, dt)
+        assert rd.years == 0
+        assert rd.months == 0
+        
+    def test_one_month_difference(self):
+        dt1 = datetime.date(2020, 2, 15)
+        dt2 = datetime.date(2020, 1, 15)
+        rd = relativedelta(dt1, dt2)
+        assert rd.months == 1
+        
+    def test_one_year_difference(self):
+        dt1 = datetime.date(2021, 1, 15)
+        dt2 = datetime.date(2020, 1, 15)
+        rd = relativedelta(dt1, dt2)
+        assert rd.years == 1
+        
+    def test_difference_with_day_adjustment(self):
+        dt1 = datetime.date(2020, 3, 1)
+        dt2 = datetime.date(2020, 1, 31)
+        rd = relativedelta(dt1, dt2)
+        assert rd.months == 1
+        
+    def test_difference_with_time_components(self):
+        dt1 = datetime.datetime(2020, 1, 15, 14, 30, 45)
+        dt2 = datetime.datetime(2020, 1, 15, 10, 20, 30)
+        rd = relativedelta(dt1, dt2)
+        assert rd.hours == 4
+        assert rd.minutes == 10
+        assert rd.seconds == 15
+        
+    def test_difference_across_year_boundary(self):
+        dt1 = datetime.date(2021, 2, 1)
+        dt2 = datetime.date(2020, 11, 1)
+        rd = relativedelta(dt1, dt2)
+        assert rd.months == 3
+        
+    def test_difference_with_datetime_and_date(self):
+        dt1 = datetime.datetime(2020, 3, 15, 10, 30)
+        dt2 = datetime.date(2020, 1, 10)
+        rd = relativedelta(dt1, dt2)
+        assert rd.years == 0
+        assert rd.months == 2
+
+
+class TestRelativeDeltaMultipleOperations:
+    def test_chain_multiple_additions_to_date(self):
+        dt = datetime.date(2020, 1, 1)
+        rd1 = relativedelta(months=1)
+        rd2 = relativedelta(days=10)
+        rd3 = relativedelta(years=1)
+        result = dt + rd1 + rd2 + rd3
+        assert result == datetime.date(2021, 2, 11)
+        
+    def test_add_and_subtract_chain(self):
+        dt = datetime.date(2020, 6, 15)
+        rd1 = relativedelta(months=3)
+        rd2 = relativedelta(days=10)
+        result = dt + rd1 - rd2
+        assert result == datetime.date(2020, 9, 5)
+        
+    def test_multiple_absolute_values_last_wins(self):
+        rd1 = relativedelta(year=2020)
+        rd2 = relativedelta(year=2025)
+        result = rd1 + rd2
+        assert result.year == 2025
+
+
+class TestRelativeDeltaNegativeValues:
+    def test_negative_years(self):
+        rd = relativedelta(years=-5)
+        assert rd.years == -5
+        
+    def test_negative_months(self):
+        rd = relativedelta(months=-3)
+        assert rd.months == -3
+        
+    def test_negative_days(self):
+        rd = relativedelta(days=-10)
+        assert rd.days == -10
+        
+    def test_negative_time_components(self):
+        rd = relativedelta(hours=-5, minutes=-30, seconds=-45)
+        assert rd.hours == -5
+        assert rd.minutes == -30
+        assert rd.seconds == -45
+        
+    def test_add_negative_to_date(self):
+        dt = datetime.date(2020, 6, 15)
+        rd = relativedelta(months=-3)
+        result = dt + rd
+        assert result == datetime.date(2020, 3, 15)
+
+
+class TestRelativeDeltaSpecialDates:
+    def test_february_29_leap_year(self):
+        dt = datetime.date(2020, 2, 29)
+        assert dt.day == 29
+        
+    def test_add_to_february_29(self):
+        dt = datetime.date(2020, 2, 29)
+        rd = relativedelta(days=1)
+        result = dt + rd
+        assert result == datetime.date(2020, 3, 1)
+        
+    def test_subtract_from_february_29(self):
+        dt = datetime.date(2020, 2, 29)
+        rd = relativedelta(days=1)
+        result = dt - rd
+        assert result == datetime.date(2020, 2, 28)
+        
+    def test_year_end_date(self):
+        dt = datetime.date(2020, 12, 31)
+        rd = relativedelta(days=1)
+        result = dt + rd
+        assert result == datetime.date(2021, 1, 1)
+        
+    def test_year_start_date(self):
+        dt = datetime.date(2020, 1, 1)
+        rd = relativedelta(days=-1)
+        result = dt + rd
+        assert result == datetime.date(2019, 12, 31)
+
+
+class TestRelativeDeltaPrecision:
+    def test_microsecond_precision(self):
+        dt = datetime.datetime(2020, 1, 1, 0, 0, 0, 0)
+        rd = relativedelta(microseconds=1)
+        result = dt + rd
+        assert result.microsecond == 1
+        
+    def test_large_microseconds(self):
+        dt = datetime.datetime(2020, 1, 1, 0, 0, 0, 0)
+        rd = relativedelta(microseconds=999999)
+        result = dt + rd
+        assert result.microsecond == 999999
+        
+    def test_microseconds_overflow_to_seconds(self):
+        rd = relativedelta(microseconds=1500000)
+        assert rd.seconds == 1
+        assert rd.microseconds == 500000
+
+
+class TestRelativeDeltaWeekdayEdgeCases:
+    def test_weekday_same_day(self):
+        dt = datetime.date(2020, 1, 6)
+        rd = relativedelta(weekday=MO)
+        result = dt + rd
+        assert result == datetime.date(2020, 1, 6)
+        
+    def test_first_weekday_of_month(self):
+        dt = datetime.date(2020, 1, 1)
+        rd = relativedelta(day=1, weekday=MO(1))
+        result = dt + rd
+        assert result.weekday() == 0
+        assert result.day <= 7
+        
+    def test_fourth_weekday_of_month(self):
+        dt = datetime.date(2020, 1, 1)
+        rd = relativedelta(day=1, weekday=WE(4))
+        result = dt + rd
+        assert result.weekday() == 2
+        assert 22 <= result.day <= 28
+
+
+class TestRelativeDeltaAbsoluteAndRelativeMix:
+    def test_relative_years_with_absolute_month(self):
+        dt = datetime.date(2020, 6, 15)
+        rd = relativedelta(years=1, month=12)
+        result = dt + rd
+        assert result.year == 2021
+        assert result.month == 12
+        
+    def test_relative_months_with_absolute_day(self):
+        dt = datetime.date(2020, 1, 31)
+        rd = relativedelta(months=1, day=15)
+        result = dt + rd
+        assert result == datetime.date(2020, 2, 15)
+        
+    def test_multiple_relative_with_multiple_absolute(self):
+        dt = datetime.datetime(2020, 6, 15, 10, 30, 45)
+        rd = relativedelta(years=1, months=2, hour=15, minute=0)
+        result = dt + rd
+        assert result == datetime.datetime(2021, 8, 15, 15, 0, 45)
+
+
+class TestRelativeDeltaMonthOverflowEdgeCases:
+    def test_eleven_months_no_year_increment(self):
+        dt = datetime.date(2020, 1, 15)
+        rd = relativedelta(months=11)
+        result = dt + rd
+        assert result == datetime.date(2020, 12, 15)
+        
+    def test_twelve_months_equals_one_year(self):
+        dt = datetime.date(2020, 1, 15)
+        rd = relativedelta(months=12)
+        result = dt + rd
+        assert result == datetime.date(2021, 1, 15)
+        
+    def test_thirteen_months(self):
+        dt = datetime.date(2020, 1, 15)
+        rd = relativedelta(months=13)
+        result = dt + rd
+        assert result == datetime.date(2021, 2, 15)
+        
+    def test_negative_month_underflow(self):
+        dt = datetime.date(2020, 3, 15)
+        rd = relativedelta(months=-3)
+        result = dt + rd
+        assert result == datetime.date(2019, 12, 15)
+
+
+class TestRelativeDeltaTimeOverflowEdgeCases:
+    def test_59_seconds_no_overflow(self):
+        rd = relativedelta(seconds=59)
+        assert rd.minutes == 0
+        assert rd.seconds == 59
+        
+    def test_60_seconds_overflow(self):
+        rd = relativedelta(seconds=60)
+        assert rd.minutes == 1
+        assert rd.seconds == 0
+        
+    def test_59_minutes_no_overflow(self):
+        rd = relativedelta(minutes=59)
+        assert rd.hours == 0
+        assert rd.minutes == 59
+        
+    def test_60_minutes_overflow(self):
+        rd = relativedelta(minutes=60)
+        assert rd.hours == 1
+        assert rd.minutes == 0
+        
+    def test_23_hours_no_overflow(self):
+        rd = relativedelta(hours=23)
+        assert rd.days == 0
+        assert rd.hours == 23
+        
+    def test_24_hours_overflow(self):
+        rd = relativedelta(hours=24)
+        assert rd.days == 1
+        assert rd.hours == 0
+
+
+class TestRelativeDeltaComplexDateOperations:
+    def test_add_year_to_leap_day(self):
+        dt = datetime.date(2020, 2, 29)
+        rd = relativedelta(years=1)
+        result = dt + rd
+        assert result == datetime.date(2021, 2, 28)
+        
+    def test_add_four_years_to_leap_day(self):
+        dt = datetime.date(2020, 2, 29)
+        rd = relativedelta(years=4)
+        result = dt + rd
+        assert result == datetime.date(2024, 2, 29)
+        
+    def test_month_end_chain(self):
+        dt = datetime.date(2020, 1, 31)
+        rd = relativedelta(months=1)
+        result1 = dt + rd
+        result2 = result1 + rd
+        assert result1 == datetime.date(2020, 2, 29)
+        assert result2 == datetime.date(2020, 3, 29)
+
+
+class TestRelativeDeltaMixedTypes:
+    def test_add_relativedelta_and_timedelta_to_date(self):
+        dt = datetime.date(2020, 1, 15)
+        rd = relativedelta(months=1)
+        td = datetime.timedelta(days=5)
+        result = dt + rd + td
+        assert result == datetime.date(2020, 2, 20)
+        
+    def test_combine_multiple_types(self):
+        dt = datetime.datetime(2020, 1, 15, 10, 0)
+        rd1 = relativedelta(months=2)
+        rd2 = relativedelta(days=5)
+        td = datetime.timedelta(hours=3)
+        result = dt + rd1 + rd2 + td
+        assert result == datetime.datetime(2020, 3, 20, 13, 0)
+
+
+class TestRelativeDeltaHashAndSet:
+    def test_relativedelta_in_set(self):
+        rd1 = relativedelta(years=1, months=2)
+        rd2 = relativedelta(years=1, months=2)
+        rd3 = relativedelta(years=2, months=3)
+        s = {rd1, rd2, rd3}
+        assert len(s) == 2
+        
+    def test_relativedelta_as_dict_key(self):
+        rd1 = relativedelta(years=1)
+        rd2 = relativedelta(years=1)
+        d = {rd1: "value1"}
+        assert d[rd2] == "value1"
+
+
+class TestRelativeDeltaBoundaryValues:
+    def test_max_month_value(self):
+        rd = relativedelta(months=11)
+        assert rd.months == 11
+        assert rd.years == 0
+        
+    def test_min_month_value(self):
+        rd = relativedelta(months=-11)
+        assert rd.months == -11
+        assert rd.years == 0
+        
+    def test_large_positive_values(self):
+        rd = relativedelta(years=1000, months=5, days=100)
+        assert rd.years == 1000
+        assert rd.months == 5
+        assert rd.days == 100
+        
+    def test_large_negative_values(self):
+        rd = relativedelta(years=-1000, months=-5, days=-100)
+        assert rd.years == -1000
+        assert rd.months == -5
+        assert rd.days == -100
+
+
+class TestRelativeDeltaReprVariations:
+    def test_repr_positive_values(self):
+        rd = relativedelta(years=1, months=2, days=3)
+        repr_str = repr(rd)
+        assert "relativedelta" in repr_str
+        assert "years=+1" in repr_str
+        
+    def test_repr_negative_values(self):
+        rd = relativedelta(years=-1, months=-2)
+        repr_str = repr(rd)
+        assert "years=-1" in repr_str
+        assert "months=-2" in repr_str
+        
+    def test_repr_with_weekday(self):
+        rd = relativedelta(weekday=MO)
+        repr_str = repr(rd)
+        assert "weekday=" in repr_str
+        
+    def test_repr_mixed_values(self):
+        rd = relativedelta(years=1, year=2025, months=2, month=6)
+        repr_str = repr(rd)
+        assert "years=+1" in repr_str
+        assert "year=2025" in repr_str
