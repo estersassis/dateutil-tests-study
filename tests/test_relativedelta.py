@@ -38,6 +38,11 @@ class TestDefaults:
         assert subject.microsecond == None
 
 
+class TestNotImplemented:
+    def test_add_relativedelta_with_date(self):
+        relativedelta() + datetime.date.today() == NotImplemented
+
+
 class TestErrors:
     def test_wrong_type_for_diff(self):
         with pytest.raises(TypeError):
@@ -54,9 +59,6 @@ class TestErrors:
     def test_wrong_type_of_days(self):
         with pytest.raises(TypeError):
             relativedelta(days="11")
-
-    def test_add_relativedelta_with_date(self):
-            relativedelta() + datetime.date.today() == NotImplemented
 
 
 class TestNormalization:
@@ -112,6 +114,12 @@ class TestWeeks:
         rd.weeks = 3
 
         assert rd.days == 23
+
+
+class TestAdd:
+    def test_add_relativedeltas(self):
+        rd = relativedelta(hours=1) + relativedelta(hours=2)
+        assert rd.hours == 3
 
     
 
