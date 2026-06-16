@@ -86,6 +86,13 @@ class TestWeeks:
 
         assert rd.days == 39
 
+    def test_weeks_setter_with_weeks_already_set(self):
+        rd = relativedelta(weeks=2)
+        rd.weeks = 2
+
+        assert rd.days == 28
+
+
         
 
 
