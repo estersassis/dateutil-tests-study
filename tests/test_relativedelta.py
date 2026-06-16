@@ -117,13 +117,22 @@ class TestWeeks:
 
 
 class TestAdd:
+    def test_add_empty(self):
+        rd = relativedelta() + relativedelta()
+        assert rd.hours == 0
+        assert rd.minutes == 0
+        assert rd.seconds == 0
+        assert rd.microseconds == 0
+        assert rd.years == 0
+        assert rd.months == 0
+        assert rd.days == 0
+
     def test_add_hours(self):
         rd = relativedelta(hours=1) + relativedelta(hours=2)
         assert rd.hours == 3
 
-    def test_add_empty(self):
-        rd = relativedelta() + relativedelta()
-        rd.hours == 0
+
+    
 
 
     
