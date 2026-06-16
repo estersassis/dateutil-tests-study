@@ -41,7 +41,7 @@ class TestDefaults:
 class TestErrors:
     def test_wrong_type(self):
         with pytest.raises(TypeError):
-            relativedelta(datetime.now(), 1)
+            relativedelta(datetime.datetime.now(), 1)
 
 
 
