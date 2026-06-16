@@ -38,10 +38,25 @@ class TestDefaults:
         assert subject.microsecond == None
 
 
+
 class TestErrors:
-    def test_wrong_type(self):
+    def test_wrong_type_for_diff(self):
         with pytest.raises(TypeError):
             relativedelta(datetime.datetime.now(), 1)
+
+
+class TestNormalization:
+    def test_microseconds(self):
+        rd = relativedelta(microseconds=1000000)
+        assert rd.microseconds == 0
+        assert rd.seconds == 1
+
+
+
+
+
+
+    
 
 
 
