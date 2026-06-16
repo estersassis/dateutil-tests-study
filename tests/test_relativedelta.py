@@ -8,7 +8,11 @@ def test_weeks_float_result():
     date = relativedelta(datetime.datetime(2026,1,28), datetime.datetime(2026,1,14))
     assert date.weeks == 2
 
-def test_input_with_hours_and_minutes():
+def test_add_hours():
+    date = datetime.datetime(2026,1,7,12,20) + relativedelta(hours=1,)
+    assert date.hour == 13
+
+def test_add_minutes():
     date = datetime.datetime(2026,1,7,12,20) + relativedelta(hours=1, minutes=20)
     assert (date.hour == 13) & (date.minute == 40)
 
