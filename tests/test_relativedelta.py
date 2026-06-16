@@ -192,7 +192,7 @@ class TestAddRelativeDelta:
 
 
 class TestRelativeDelta:
-    def test_between_deltas(self):
+    def test_diff_deltas(self):
         rd = relativedelta(
             datetime.datetime(2026,6, 16),
             datetime.datetime(2025, 5, 1)
@@ -201,6 +201,18 @@ class TestRelativeDelta:
         assert rd.years == 1
         assert rd.months == 1
         assert rd.days == 15
+
+
+class TestEquality:
+    def test_equality_of_deltas(self):
+        rd = relativedelta(
+            datetime.datetime(2026, 5, 1),
+            datetime.datetime(2025, 6, 1)
+        )
+
+
+        assert rd == relativedelta(years=1, months=1)
+
 
 
 
