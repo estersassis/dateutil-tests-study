@@ -216,6 +216,9 @@ class TestEquality:
         # has one more month
         assert relativedelta(years=1) != relativedelta(months=13) 
 
+    def test_hashing(self):
+        assert hash(relativedelta(years=1)) == hash(relativedelta(months=12))
+
 
 
 
