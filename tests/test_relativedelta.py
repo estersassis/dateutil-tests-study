@@ -51,6 +51,10 @@ class TestErrors:
         with pytest.raises(ValueError):
             relativedelta(months="11")
 
+    def test_wrong_type_of_days(self):
+        with pytest.raises(ValueError):
+            relativedelta(days="11")
+
 
 class TestNormalization:
     def test_microseconds(self):
