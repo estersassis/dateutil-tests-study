@@ -24,10 +24,14 @@ def test_add_year():
     date = datetime.datetime(2026,1,30,12,20) + relativedelta(years=2,months=1)
     assert date.day == 29
 
-def test_add_minutes():
+def test_overflow_minute():
     date = datetime.datetime(2026,1,30,12,20) + relativedelta(minutes=60)   
     assert date.minute == 20
 
-def test_add_minutes():
+def test_overflow_hour():
     date = datetime.datetime(2026,1,30,12,20) + relativedelta(hours=78)   
     assert date.day == 2
+
+def test_overflow_day():
+    date = datetime.datetime(2026,1,30,12,20) + relativedelta(days=70)   
+    assert date.months == 3
