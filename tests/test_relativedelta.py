@@ -70,6 +70,14 @@ class TestNormalization:
         assert relativedelta(hours=1)._has_time == 1
 
 
+class TestWeeks:
+    def test_weeks(self):
+        assert relativedelta(days=14).weeks == 2
+
+
+    
+
+
 
 
 
