@@ -9,7 +9,7 @@ class TestDefaults:
         assert isinstance(subject, relativedelta)
 
     def test_is_falsy(self):
-        assert relativedelta()
+        assert not relativedelta()
 
 
 
