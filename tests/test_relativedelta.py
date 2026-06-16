@@ -11,7 +11,7 @@ class TestDefaults:
     def test_is_falsy(self):
         assert not relativedelta()
 
-    def test_default_attrs(self):
+    def test_default_zeroes(self):
         subject = relativedelta()
 
         assert subject.years == 0
@@ -22,6 +22,22 @@ class TestDefaults:
         assert subject.minutes == 0
         assert subject.seconds == 0
         assert subject.microseconds == 0
+
+    def test_default_nones(self):
+        subject = relativedelta()
+
+        assert year == None
+        assert month == None
+        assert day == None
+        assert weekday == None
+        assert yearday == None
+        assert nlyearday == None
+        assert hour == None
+        assert minute == None
+        assert second == None
+        assert microsecond == None
+
+
 
 
 
