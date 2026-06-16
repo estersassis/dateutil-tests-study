@@ -38,7 +38,6 @@ class TestDefaults:
         assert subject.microsecond == None
 
 
-
 class TestErrors:
     def test_wrong_type_for_diff(self):
         with pytest.raises(TypeError):
@@ -65,6 +64,12 @@ class TestNormalization:
         rd = relativedelta(months=14)
         assert rd.months == 2
         assert rd.years == 1
+
+    def test_has_time(self):
+        assert relativedelta()._has_time == 0
+        assert relativedelta(hours=1)._has_time == 1
+
+
 
 
 
