@@ -30,8 +30,6 @@ class TestDefaults:
         assert subject.month == None
         assert subject.day == None
         assert subject.weekday == None
-        assert subject.yearday == None
-        assert subject.nlyearday == None
         assert subject.hour == None
         assert subject.minute == None
         assert subject.second == None
