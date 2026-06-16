@@ -163,6 +163,7 @@ class TestAddRelativeDelta:
         assert (relativedelta() + relativedelta(weekday=4)).weekday == FR
         assert (relativedelta() + relativedelta(weekday=5)).weekday == SA
         assert (relativedelta() + relativedelta(weekday=6)).weekday == SU
+        assert (relativedelta() + relativedelta(weekday=7)).weekday == MO
 
 
 
