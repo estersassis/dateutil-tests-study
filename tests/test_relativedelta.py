@@ -8,6 +8,10 @@ def test_weeks_float_result():
     date = relativedelta(datetime.datetime(2026,1,28), datetime.datetime(2026,1,14))
     assert date.weeks == 2
 
-def test_inputs_with_hours():
+def test_input_with_hours_and_minutes():
     date = datetime.datetime(2026,1,7,12,20) + relativedelta(hours=+1, minutes=+20)
     assert date.hour == 13 & date.minute == 40
+
+def test_weekday():
+    date = datetime.datetime(2026,1,7) + relativedelta(weekday="MO")
+    assert date.weekday == "MO"
