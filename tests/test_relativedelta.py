@@ -1,5 +1,5 @@
 import pytest
-from src.relativedelta import relativedelta
+from relativedelta import relativedelta
 
 import datetime
 
