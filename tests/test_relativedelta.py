@@ -220,6 +220,13 @@ class TestEquality:
         assert hash(relativedelta(years=1)) == hash(relativedelta(months=12))
 
 
+class TestMultiplication:
+    def test_multiplication(self):
+        rd = relativedelta(months=12) * 5
+
+        assert rd.years == 5
+
+
 
 
 
