@@ -1,6 +1,6 @@
 import pytest
 from relativedelta import (
-    relativedelta, weekdays
+    relativedelta, WE
 )
 
 import datetime
