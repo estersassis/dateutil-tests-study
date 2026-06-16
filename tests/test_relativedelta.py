@@ -30,4 +30,4 @@ def test_add_minutes():
 
 def test_add_minutes():
     date = datetime.datetime(2026,1,30,12,20) + relativedelta(hours=78)   
-    assert date.day == 3
+    assert date.day == 2
