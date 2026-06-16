@@ -77,6 +77,10 @@ class TestErrors:
         with pytest.raises(TypeError):
             relativedelta(days="11")
 
+    def test_exceeding_yeardays(self):
+        with pytest.raises(ValueError):
+            relativedelta(yeardays=367)
+
 
 class TestNormalization:
     def test_microseconds(self):
