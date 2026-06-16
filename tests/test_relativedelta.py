@@ -9,5 +9,5 @@ def test_weeks_float_result():
     assert date.weeks == 2
 
 def test_inputs_with_hours():
-    date = datetime.datetime(2026,1,7,12,20) + relativedelta(minutes=+20)
-    assert date.minute == 40
+    date = datetime.datetime(2026,1,7,12,20) + relativedelta(hours=+1, minutes=+20)
+    assert date.hour == 12 & date.minute == 40
