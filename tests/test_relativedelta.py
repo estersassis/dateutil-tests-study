@@ -5,3 +5,5 @@ from src.relativedelta import *
 def test_weeks_float_result():
     date = relativedelta(datetime.datetime(2026,1,10), datetime.datetime(2026,1,1))
     assert date.weeks == 1
+    date = relativedelta(datetime.datetime(2026,1,25), datetime.datetime(2026,1,1))
+    assert date.weeks == 3
