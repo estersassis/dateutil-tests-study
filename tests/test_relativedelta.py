@@ -210,8 +210,7 @@ class TestEquality:
             datetime.datetime(2025, 6, 1)
         )
 
-
-        assert rd == relativedelta(years=1, months=1)
+        assert rd == relativedelta(months=11)
 
 
 
