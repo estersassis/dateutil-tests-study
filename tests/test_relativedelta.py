@@ -90,7 +90,14 @@ class TestWeeks:
         rd = relativedelta(weeks=2)
         rd.weeks = 3
 
-        assert rd.days == 7
+        assert rd.days == 21
+
+    def test_weeks_setter_with_weeks_and_days_already_set(self):
+        rd = relativedelta(weeks=2, days=2)
+        rd.weeks = 3
+
+        assert rd.days == 0
+
 
 
         
