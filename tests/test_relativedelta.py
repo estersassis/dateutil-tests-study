@@ -187,8 +187,20 @@ class TestAddRelativeDelta:
         assert (relativedelta() + relativedelta(weekday=5)).weekday == SA
         assert (relativedelta() + relativedelta(weekday=6)).weekday == SU
 
-    def test_add_absolutes(self):
+    def test_add_absolutes_with_days(self):
         assert (relativedelta(yearday=61) + relativedelta(days=25)).day == 2
+
+
+class TestRelativeDelta:
+    def test_between_deltas(self):
+        rd = relativedelta(
+            datetime.datetime(2026,6, 16),
+            datetime.datetime(2025, 5, 1)
+        )
+
+        assert rd.years == 1
+        assert rd.months == 1
+        assert rd.days == 15
 
 
 
