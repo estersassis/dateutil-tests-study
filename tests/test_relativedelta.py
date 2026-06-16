@@ -45,7 +45,7 @@ class TestYearDay:
         assert relativedelta(yearday=25).day == 25
 
     def test_nlyearday_ignores_yearday(self):
-        assert relativedelta(nlyearday=26, yearday=25).days == 26
+        assert relativedelta(nlyearday=60, yearday=61).day == 60
 
 
 class TestNotImplemented:
