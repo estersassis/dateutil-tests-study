@@ -72,10 +72,13 @@ class TestDefaults:
 
 
 class TestLeapDays:
-    def test_leapdays_added(self):
+    def test_leapdays_added_in_leapyear(self):
         rd = relativedelta(leapdays=1)
         assert datetime.date(2024, 3, 1) + rd == datetime.date(2024, 3, 2)
 
+    def test_leapdays_not_applied_in_not_leapyear(self):
+        rd = relativedelta(leapdays=1)
+        assert datetime.date(2026, 3, 1) + rd == datetime.date(2024, 3, 1)
 
 
 class TestYearDay:
