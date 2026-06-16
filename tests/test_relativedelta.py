@@ -13,5 +13,5 @@ def test_input_with_hours_and_minutes():
     assert (date.hour == 13) & (date.minute == 40)
 
 def test_weekday():
-    date = datetime.datetime(2026,1,7) + relativedelta(weekday="MO")
+    date = datetime.datetime(2026,1,7) + relativedelta(weekday=0)
     assert date.weekday == "MO"
