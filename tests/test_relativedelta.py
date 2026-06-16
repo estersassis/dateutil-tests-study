@@ -1,5 +1,7 @@
 import pytest
-from relativedelta import relativedelta
+from relativedelta import (
+    relativedelta, WE
+)
 
 import datetime
 
@@ -155,7 +157,7 @@ class TestAddRelativeDelta:
 
     def test_add_weekday(self):
         rd = relativedelta() + relativedelta(weekday=2)
-        assert rd.weekday == 2
+        assert rd.weekday == WE
 
 
 
