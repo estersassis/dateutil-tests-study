@@ -44,7 +44,8 @@ class TestErrors:
             relativedelta(datetime.datetime.now(), 1)
 
     def test_wrong_type_of_year(self):
-        relativedelta(years="2026")
+        with pytest.raises(ValueError):
+            relativedelta(years="2026")
 
 
 class TestNormalization:
