@@ -52,7 +52,7 @@ class TestErrors:
             relativedelta(months="11")
 
     def test_wrong_type_of_days(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             relativedelta(days="11")
 
 
