@@ -52,7 +52,7 @@ class TestNormalization:
         assert rd.seconds == 1
 
     def test_seconds(self):
-        rd = relativedelta(seconds=61):
+        rd = relativedelta(seconds=61)
         assert rd.seconds == 1
         assert rd.minutes == 1
 
