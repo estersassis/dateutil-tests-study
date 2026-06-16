@@ -1,6 +1,8 @@
 import pytest
 from src.relativedelta import relativedelta
 
+import datetime
+
 
 # Test default behaviours
 class TestDefaults:
@@ -34,6 +36,14 @@ class TestDefaults:
         assert subject.minute == None
         assert subject.second == None
         assert subject.microsecond == None
+
+
+class TestErrors:
+    def test_wrong_type(self):
+        with pytest.raises(TypeError):
+            relativedelta(datetime.now(), 1)
+
+
 
 
 
