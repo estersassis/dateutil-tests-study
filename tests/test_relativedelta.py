@@ -157,7 +157,7 @@ class TestAddRelativeDelta:
 
     def test_add_weekday(self):
         rd = relativedelta() + relativedelta(weekday=2)
-        assert rd.weekday == weekdays(2)
+        assert rd.weekday == WE
 
 
 
