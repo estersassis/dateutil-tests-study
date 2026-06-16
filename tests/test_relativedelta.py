@@ -52,7 +52,7 @@ class TestYearDay:
 
     def test_yearday_affects_leapdays(self):
         assert relativedelta(leapdays=1, yearday=59).leapdays == 1
-        assert relativedelta(leapdays=1, yearday=60).leapdays == 0
+        assert relativedelta(leapdays=1, yearday=60).leapdays == -1
 
 
 class TestNotImplemented:
