@@ -16,10 +16,10 @@ def test_add_week():
     date = datetime.datetime(2026,1,7,12,20) + relativedelta(days=7)
     assert date.day == 14
 
-def test_add_month():
-    date = datetime.datetime(2026,1,30,12,20) + relativedelta(month=2)
+def test_month():
+    date = datetime.datetime(2026,1,30,12,20) + relativedelta(months=2)
     assert date.day == 28
 
-def test_add_year():
+def test_leap_year():
     date = datetime.datetime(2026,1,30,12,20) + relativedelta(year=2028,month=2)
     assert date.day == 29
