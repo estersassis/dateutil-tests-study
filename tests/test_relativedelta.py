@@ -25,4 +25,5 @@ def test_add_year():
     assert date.day == 29
 
 def test_add_minutes():
-    date = datetime.datetime(2026,1,30,12,20) + relativedelta(minutes=60)   assert date.minute == 20
+    date = datetime.datetime(2026,1,30,12,20) + relativedelta(minutes=60)   
+    assert date.minute == 20
