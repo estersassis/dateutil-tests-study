@@ -9,5 +9,5 @@ def test_weeks_float_result():
     assert date.weeks == 2
 
 def test_week_day():
-    date = relativedelta(datetime.datetime(2026,1,7,12,20), datetime.datetime(2026,1,7,12,20))
+    date = relativedelta(datetime.datetime(2026,1,7,12,20))
     assert date.weekday == "TU"
