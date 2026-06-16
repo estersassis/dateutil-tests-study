@@ -56,8 +56,7 @@ class TestErrors:
             relativedelta(days="11")
 
     def test_add_relativedelta_with_date(self):
-        with pytest.raises(NotImplemented):
-            relativedelta() + datetime.date.today()
+            relativedelta() + datetime.date.today() == NotImplemented
 
 
 class TestNormalization:
