@@ -117,9 +117,10 @@ class TestWeeks:
 
 
 class TestAdd:
-    def test_add_relativedeltas(self):
+    def test_add_hours(self):
         rd = relativedelta(hours=1) + relativedelta(hours=2)
         assert rd.hours == 3
+
 
     
 
