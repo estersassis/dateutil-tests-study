@@ -127,6 +127,10 @@ class TestAdd:
         assert rd.months == 0
         assert rd.days == 0
 
+    def test_add_years(self):
+        rd = relativedelta() + relativedelta(years=1)
+        assert rd.years == 1
+
     def test_add_hours(self):
         rd = relativedelta(hours=1) + relativedelta(hours=2)
         assert rd.hours == 3
@@ -135,6 +139,7 @@ class TestAdd:
         rd = relativedelta(hours=23) + relativedelta(hours=2)
         assert rd.hours == 1
         assert rd.days == 1
+
 
 
 
