@@ -131,6 +131,12 @@ class TestAdd:
         rd = relativedelta(hours=1) + relativedelta(hours=2)
         assert rd.hours == 3
 
+    def test_add_hours_to_overflow(self):
+        rd = relativedelta(hours=23) + relativedelta(hours=2)
+        assert rd.hours == 1
+        assert rd.days == 1
+
+
 
     
 
