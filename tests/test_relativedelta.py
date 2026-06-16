@@ -74,8 +74,8 @@ class TestYearDay:
 
     def test_yearday_affects_month(self):
         rd = relativedelta(yearday=18)
-        assert rd.days == 18
-        assert rd.months == 1
+        assert rd.day == 18
+        assert rd.month == 1
 
     def test_nlyearday_ignores_yearday(self):
         assert relativedelta(nlyearday=60, yearday=61).day == 1
