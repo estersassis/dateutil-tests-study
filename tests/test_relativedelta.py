@@ -56,6 +56,11 @@ class TestNormalization:
         assert rd.seconds == 1
         assert rd.minutes == 1
 
+    def test_hours(self):
+        rd = relativedelta(25)
+        assert rd.hours == 1
+        assert rd.days == 1
+
 
 
 
