@@ -71,6 +71,13 @@ class TestDefaults:
         assert subject.microsecond == None
 
 
+class TestLeapDays:
+    def test_leapdays_added(self):
+        rd = relativedelta(leapdays=1)
+        assert datetime.date(2024, 3, 1) + rd == datetime.date(2024, 3, 2)
+
+
+
 class TestYearDay:
     def test_yearday(self):
         assert relativedelta(yearday=25).day == 25
