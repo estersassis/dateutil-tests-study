@@ -23,3 +23,6 @@ def test_add_month():
 def test_add_year():
     date = datetime.datetime(2026,1,30,12,20) + relativedelta(years=2,months=1)
     assert date.day == 29
+
+def test_add_minutes():
+    date = datetime.datetime(2026,1,30,12,20) + relativedelta(minutes=60)   assert date.minute == 20
