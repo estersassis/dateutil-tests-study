@@ -55,6 +55,10 @@ class TestErrors:
         with pytest.raises(TypeError):
             relativedelta(days="11")
 
+    def test_add_relativedelta_with_date(self):
+        with pytest.raises(NotImplemented):
+            relativedelta() + datetime.date.today()
+
 
 class TestNormalization:
     def test_microseconds(self):
