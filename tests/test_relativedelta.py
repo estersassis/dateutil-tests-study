@@ -26,16 +26,16 @@ class TestDefaults:
     def test_default_nones(self):
         subject = relativedelta()
 
-        assert year == None
-        assert month == None
-        assert day == None
-        assert weekday == None
-        assert yearday == None
-        assert nlyearday == None
-        assert hour == None
-        assert minute == None
-        assert second == None
-        assert microsecond == None
+        assert subject.year == None
+        assert subject.month == None
+        assert subject.day == None
+        assert subject.weekday == None
+        assert subject.yearday == None
+        assert subject.nlyearday == None
+        assert subject.hour == None
+        assert subject.minute == None
+        assert subject.second == None
+        assert subject.microsecond == None
 
 
 
