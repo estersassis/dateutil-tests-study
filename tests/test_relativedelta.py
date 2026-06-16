@@ -204,13 +204,17 @@ class TestRelativeDelta:
 
 
 class TestEquality:
-    def test_equality_of_deltas(self):
+    def test_equality(self):
         rd = relativedelta(
             datetime.datetime(2026, 5, 1),
             datetime.datetime(2025, 6, 1)
         )
 
         assert rd == relativedelta(months=11)
+
+    def test_not_equal(self):
+        # has one more month
+        assert relativedelta(years=1) != relativedelta(months=13) 
 
 
 
