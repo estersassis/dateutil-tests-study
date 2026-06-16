@@ -116,7 +116,7 @@ class TestWeeks:
         assert rd.days == 23
 
 
-class TestAdd:
+class TestAddRelativeDelta:
     def test_add_empty(self):
         rd = relativedelta() + relativedelta()
         assert rd.hours == 0
@@ -131,9 +131,22 @@ class TestAdd:
         rd = relativedelta() + relativedelta(years=1)
         assert rd.years == 1
 
+    def test_add_months(self):
+        rd = relativedelta() + relativedelta(months=1)
+        assert rd.months == 1
+
+    def test_add_days(self):
+        rd = relativedelta() + relativedelta(days=1)
+        assert rd.days == 1
+
     def test_add_hours(self):
         rd = relativedelta(hours=1) + relativedelta(hours=2)
         assert rd.hours == 3
+
+    def test_add_minutes(self):
+        rd = relativedelta(hours=1) + relativedelta(minutes=30)
+        assert rd.minutes == 30
+        assert rd.hours == 1
 
     def test_add_hours_to_overflow(self):
         rd = relativedelta(hours=23) + relativedelta(hours=2)
