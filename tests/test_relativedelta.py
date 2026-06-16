@@ -61,6 +61,11 @@ class TestNormalization:
         assert rd.hours == 1
         assert rd.days == 1
 
+    def test_months(self):
+        rd = relativedelta(months=14)
+        assert rd.months == 2
+        assert rd.years == 1
+
 
 
 
