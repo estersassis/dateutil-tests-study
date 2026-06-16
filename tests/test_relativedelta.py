@@ -9,7 +9,7 @@ import datetime
 class TestWarnings:
     def test_deprecation_for_non_integer_values_as_abs_information(self):
         with pytest.warns(DeprecationWarning):
-            relativedelta(days=1.5)
+            relativedelta(day=1.5)
 
 class TestNotImplemented:
     def test_add_relativedelta_with_date(self):
