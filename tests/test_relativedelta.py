@@ -14,4 +14,4 @@ def test_input_with_hours_and_minutes():
 
 def test_add_week():
     date = datetime.datetime(2026,1,7,12,20) + relativedelta(days=7)
-    assert date.weeks== 2
+    assert date.day == 14
