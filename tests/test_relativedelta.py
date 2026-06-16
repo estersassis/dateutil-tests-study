@@ -3,4 +3,4 @@ import datetime, pytest
 from src.relativedelta import *
 
 def test_weeks_float_result():
-    assert relativedelta.weeks((datetime.datetime(2026,1,7))) == 1
+    assert relativedelta.weeks(datetime(datetime.datetime(2026,1,7))) == 1
