@@ -121,6 +121,10 @@ class TestAdd:
         rd = relativedelta(hours=1) + relativedelta(hours=2)
         assert rd.hours == 3
 
+    def test_add_empty(self):
+        rd = relativedelta() + relativedelta()
+        rd.hours == 0
+
 
     
 
