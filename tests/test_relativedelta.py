@@ -96,7 +96,7 @@ class TestWeeks:
         rd = relativedelta(weeks=2, days=2)
         rd.weeks = 3
 
-        assert rd.days == 0
+        assert rd.days == 23
 
 
 
