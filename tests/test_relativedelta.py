@@ -43,6 +43,9 @@ class TestErrors:
         with pytest.raises(TypeError):
             relativedelta(datetime.datetime.now(), 1)
 
+    def test_wrong_type_of_year(self):
+        relativedelta(years="2026")
+
 
 class TestNormalization:
     def test_microseconds(self):
@@ -97,6 +100,8 @@ class TestWeeks:
         rd.weeks = 3
 
         assert rd.days == 23
+
+    
 
 
 
