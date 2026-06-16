@@ -6,7 +6,33 @@ from relativedelta import (
 import datetime
 
 
-# Test default behaviours
+class TestNotImplemented:
+    def test_add_relativedelta_with_date(self):
+        relativedelta() + datetime.date.today() == NotImplemented
+
+
+class TestErrors:
+    def test_wrong_type_for_diff(self):
+        with pytest.raises(TypeError):
+            relativedelta(datetime.datetime.now(), 1)
+
+    def test_wrong_type_of_years(self):
+        with pytest.raises(ValueError):
+            relativedelta(years="2026")
+
+    def test_wrong_type_of_months(self):
+        with pytest.raises(ValueError):
+            relativedelta(months="11")
+
+    def test_wrong_type_of_days(self):
+        with pytest.raises(TypeError):
+            relativedelta(days="11")
+
+    def test_exceeding_yearday(self):
+        with pytest.raises(ValueError):
+            relativedelta(yearday=367)
+
+
 class TestDefaults:
     def test_empty(self):
         subject = relativedelta()
@@ -41,10 +67,15 @@ class TestDefaults:
 
 
 class TestYearDay:
-    def test_year_day(self):
+    def test_yearday(self):
         assert relativedelta(yearday=25).day == 25
         assert relativedelta(yearday=60).day == 1
         assert relativedelta(yearday=61).day == 2
+
+    def test_yearday_affects_month(self):
+        rd = relativedelta(yearday=18)
+        assert rd.days == 18
+        assert rd.months == 1
 
     def test_nlyearday_ignores_yearday(self):
         assert relativedelta(nlyearday=60, yearday=61).day == 1
@@ -53,33 +84,6 @@ class TestYearDay:
     def test_yearday_affects_leapdays(self):
         assert relativedelta(leapdays=1, yearday=59).leapdays == 1
         assert relativedelta(leapdays=1, yearday=60).leapdays == -1
-
-
-class TestNotImplemented:
-    def test_add_relativedelta_with_date(self):
-        relativedelta() + datetime.date.today() == NotImplemented
-
-
-class TestErrors:
-    def test_wrong_type_for_diff(self):
-        with pytest.raises(TypeError):
-            relativedelta(datetime.datetime.now(), 1)
-
-    def test_wrong_type_of_years(self):
-        with pytest.raises(ValueError):
-            relativedelta(years="2026")
-
-    def test_wrong_type_of_months(self):
-        with pytest.raises(ValueError):
-            relativedelta(months="11")
-
-    def test_wrong_type_of_days(self):
-        with pytest.raises(TypeError):
-            relativedelta(days="11")
-
-    def test_exceeding_yeardays(self):
-        with pytest.raises(ValueError):
-            relativedelta(yearday=367)
 
 
 class TestNormalization:
