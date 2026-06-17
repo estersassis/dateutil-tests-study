@@ -3,10 +3,6 @@ import datetime
 
 import pytest
 
-# Adjust this import to your project structure if needed.
-# Examples:
-#   from relativedelta import relativedelta, MO, TU, FR
-#   from your_package.relativedelta import relativedelta, MO, TU, FR
 from src.relativedelta import relativedelta, MO, TU, FR
 
 
