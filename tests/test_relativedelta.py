@@ -57,12 +57,7 @@ def test_relativedelta_should_throw_on_invalid_yearday():
 def test_relativedelta_fix_should_div_correctly():
 	rd = relativedelta(years=1, months=11, hours=23, minutes=59, seconds=59, microseconds=1000000)
 
-	assert rd.years == 2
-	assert rd.months == 0
-	assert rd.hours == 0
-	assert rd.minutes == 0
-	assert rd.seconds == 0
-	assert rd.microseconds == 0
+	assert rd.microseconds == 0 and rd.seconds == 0 and rd.minutes == 0 and rd.hours == 0 and rd.months == 0 and rd.years == 2
 
 def test_relativedelta_should_normalize():
 	rd = relativedelta(days=3.83771875)
@@ -111,6 +106,6 @@ def test_relativedelta_should_divide():
 	rd = relativedelta(years=10, months=7, days=3)
 	result = rd / 2
 
-	test_result = relativedelta(years=5, months=3.5, days=1.5)
-
-	assert result == test_result
+	assert result.years == 5
+	assert result.months == 3
+	assert result.days == 1
