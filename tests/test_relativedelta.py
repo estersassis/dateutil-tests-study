@@ -160,13 +160,10 @@ def test_leapdays_adds_only_after_february_in_leap_year():
 
 
 def test_yearday_and_nlyearday():
-    # 60th day of a leap year is Feb 29 because yearday sets leapdays=-1 after Feb.
     assert datetime.date(2024, 1, 1) + relativedelta(yearday=60) == datetime.date(2024, 2, 29)
 
-    # nlyearday ignores leap days, so the 60th non-leap day is Mar 1.
     assert datetime.date(2024, 1, 1) + relativedelta(nlyearday=60) == datetime.date(2024, 3, 1)
-
-    # In a non-leap year, yearday=60 is Mar 1.
+    
     assert datetime.date(2023, 1, 1) + relativedelta(yearday=60) == datetime.date(2023, 3, 1)
 
 
