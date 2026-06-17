@@ -37,7 +37,7 @@ jobs:
         poetry run coverage report -m > coverage_report.txt
         poetry run coverage json -o coverage_data.json
 
-    - name: Calcular Lead Time Dinâmico (M2) e Contar Asserções (M3)
+    - name: Calcular Lead Time Dinâmico (M2), Ciclos(M3) e Contar Testes/Asserções (M4)
       run: |
         echo "=== DADOS METODOLÓGICOS DO EXPERIMENTO ==="
         
@@ -73,15 +73,17 @@ jobs:
           echo "Branch Avaliada: $BRANCH_ATUAL"
           echo "Primeira Iteração na Branch (Timestamp): $FIRST_ITERATION_TS"
           echo "Última Iteração na Branch (Timestamp): $CURRENT_ITERATION_TS"
-          echo "Total de Ciclos nesta Branch (Tentativa/Erro): $TOTAL_ITERACOES"
+          echo "Total de Ciclos nesta Branch (Tentativa/Erro) (M3): $TOTAL_ITERACOES"
           echo "Lead Time Real da Tarefa (M2): $LEAD_TIME_MINUTES minutos"
         fi
         
-        # 2. Contagem Estática de Asserções (M3)
+        # 2. Contagem Estática de Asserções/Testes (M4)
         if [ -f "tests/test_relativedelta.py" ]; then
-          echo "Densidade de Asserções (M3): $(grep -o "assert " tests/test_relativedelta.py | wc -l) asserts"
+          TEST_COUNT=$(grep -o "def test_" tests/test_relativedelta.py | wc -l)
+          ASSERT_COUNT=$(grep -o "assert " tests/test_relativedelta.py | wc -l)
+          echo "Granularidade e Densidade (M4 - Testes/Asserções): $TEST_COUNT/$ASSERT_COUNT"
         else
-          echo "Densidade de Asserções (M3): 0 (Arquivo de teste não encontrado)"
+          echo "Granularidade e Densidade (M4 - Testes/Asserções): 0/0 (Arquivo de teste não encontrado)"
         fi
         echo "=========================================="
 
